@@ -11,7 +11,7 @@ resolve the call automatically or hand it to a human agent with a written
 briefing.
 
 **Technical Stack: LangGraph as Agentic Workflow, Snowflake as LLM provider, 
-claude-sonnet-5 as LLM, tool calling implemented via structured JSON-parsing**
+claude-sonnet-5 as LLM, tool calling implemented via structured JSON-parsing, Pytests**
 
 ## The idea
 
