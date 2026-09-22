@@ -1,8 +1,6 @@
 # Insurance Call Center Agentic Workflow
 
-**Remark: This is an anonymized excerpt, which is based on a real-world prototype
-that served as foundation for a production-grade project. The production-grade project
-is under NDA and cannot be shared.**
+**Remark: Built to demonstrate an approach used in NDA-protected production work: same architecture and technique, entirely synthetic data, rebuilt from scratch for public sharing. **
 
 A LangGraph multi-agent workflow that takes a raw call transcript from an
 insurance call center and carries it end to end: understand what the caller
