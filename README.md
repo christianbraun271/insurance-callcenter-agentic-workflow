@@ -10,7 +10,7 @@ wants, verify who they are, triage a claim if there is one, and either
 resolve the call automatically or hand it to a human agent with a written
 briefing.
 
-**Technical Stack: LangGraph for agentic orchestration, Snowflake Cortex as the LLM host, claude-sonnet-5 for tool-calling steps, structured output via prompt-injected JSON schema (not native function-calling), and a hand-rolled tool-calling loop where the prebuilt pattern didn't fit.**
+**Technical Stack: LangGraph for agentic orchestration, Snowflake Cortex as the LLM host, claude-sonnet-5 for tool-calling steps, structured output via prompt-injected JSON schema (not native function-calling), network-independent Pytest.**
 
 ## The idea
 
