@@ -4,7 +4,7 @@ tools *and* end in a typed result, not free text.
 langgraph.prebuilt's ToolNode + tools_condition (see the arithmetic-agent
 examples this project's sibling folder, langgraph-learning, builds up) is the
 right fit for an open-ended chat loop. It doesn't fit here, because each of
-these steps has to end with one specific, structured answer -- so the "final
+these steps has to end with one specific, structured answer. So the "final
 answer" is modeled as one more tool the model can call, and the loop stops
 the moment that one is called.
 """
@@ -32,7 +32,7 @@ def run_agentic_step(
     """Runs `llm` in a loop: on each turn it may call any of `tools`, and
     must eventually call `output_schema` to produce its final, typed answer.
 
-    Returns (parsed_answer, trace) -- trace is a list of human-readable
+    Returns (parsed_answer, trace). trace is a list of human-readable
     strings describing each tool call made, for the demo's printed log.
     """
     bound_llm = llm.bind_tools([*tools, output_schema])
