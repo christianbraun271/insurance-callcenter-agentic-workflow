@@ -1,4 +1,4 @@
-# Insurance Call Center — Agentic Workflow
+# Insurance Call Center Agentic Workflow
 
 A LangGraph multi-agent workflow that takes a raw call transcript from an
 insurance call center and carries it end to end: understand what the caller
@@ -8,8 +8,8 @@ briefing.
 
 ## The idea
 
-A call center handles a few repeatable shapes of call — file a claim, ask a
-coverage question, ask a billing question — but each one still needs a
+A call center handles a few repeatable shapes of call: file a claim, ask a
+coverage question, ask a billing question. Each one still needs a
 person to verify the caller, pull up the right record, and judge whether
 anything about it needs a closer look. This project automates that judgment
 as a graph of small, focused steps, each backed by a real LLM call or a real
@@ -37,23 +37,23 @@ gets a written handoff brief explaining why). See
 
 ## How it works
 
-- **Intake** — the model reads the raw transcript and extracts intent,
+- **Intake**: the model reads the raw transcript and extracts intent,
   caller name, and policy number as a typed (Pydantic) result via
   `with_structured_output`. No tools involved; this is a pure extraction
   step.
-- **Verify identity** — a deterministic step (no LLM judgment call needed
-  here): look up the policy by number, compare the caller's stated name
+- **Verify identity**: a deterministic step (no LLM judgment call needed
+  here). Look up the policy by number, compare the caller's stated name
   against the name on file. Unverifiable calls go straight to a human.
-- **Triage claim** *(claims only)* — the model is given the policy on file
+- **Triage claim** *(claims only)*: the model is given the policy on file
   and the transcript, and is expected to call a `check_claim_history` tool
   before producing its final assessment (claim type, severity, and any risk
   flags). This step uses a small hand-rolled agentic loop
   ([`src/agent_loop.py`](src/agent_loop.py)): the model can call tools freely,
   but must eventually call a schema-shaped "final answer" tool to end the
-  turn — the same idea behind LangGraph's `ToolNode` / `tools_condition`
+  turn. That's the same idea behind LangGraph's `ToolNode` / `tools_condition`
   pattern, adapted for a step that has to end in a typed result rather than
   free text.
-- **Resolve or escalate** — a clean claim gets filed (`create_claim_ticket`)
+- **Resolve or escalate**: a clean claim gets filed (`create_claim_ticket`)
   and a short confirmation message is generated for the caller. A claim
   with risk flags, a coverage/billing question, or a call that couldn't be
   verified all end at the same `escalate` node, which writes a short brief
@@ -92,11 +92,11 @@ Pass one or more filenames to run just those calls, e.g.
 ### What you need
 
 - A Snowflake account with **Cortex** enabled, and a warehouse to run on.
-- A programmatic access token (PAT) — `create_session_from_pat()` in
+- A programmatic access token (PAT): `create_session_from_pat()` in
   `src/llm.py` authenticates with the `SNOWFLAKE_PAT` env var, the same
   pattern as this repo's LangGraph learning exercises.
 - **The model matters here.** Cortex's `llama3.1-70b` does not support tool
-  calling — it rejects tool-bound requests outright — so this project runs
+  calling (it rejects tool-bound requests outright), so this project runs
   on `claude-sonnet-5` instead, which Snowflake documents as tool-calling
   capable. Every step that binds tools or asks for structured output (which
   is implemented as tool calling under the hood) needs a model that supports
@@ -113,15 +113,35 @@ Pass one or more filenames to run just those calls, e.g.
 
 ## Scope
 
-All policy data is synthetic — four fictional policyholders, invented policy
+All policy data is synthetic: four fictional policyholders, invented policy
 numbers, no real insurer's data or systems. This is a demonstration of the
 workflow pattern (detect intent → verify → triage → route to automation or a
 human), not a production call-handling system: there's no telephony
 integration, no persistence beyond the in-memory mock policy store, and no
 retry/observability layer.
 
+## Future work
+
+This is an initial prototype covering the reasoning core of a call-handling
+agent, not a deployable call center system. It currently runs on written
+transcripts as input. The natural next step is closing that gap with real
+voice, on both ends of the call:
+
+- **Speech-to-text**, to turn a live caller's audio into the transcript this
+  graph already consumes.
+- **Text-to-speech**, to turn `resolution_message` back into audio the
+  caller actually hears.
+- **A telephony API** (e.g. Twilio), to put the whole thing on an actual
+  phone line instead of reading `.txt` files from disk.
+
+None of that changes the graph itself. `state.py`'s `call_transcript` field
+is exactly what a speech-to-text transcript would look like, and
+`resolution_message` is exactly what a text-to-speech step would read
+aloud, so the orchestration layer built here should carry over largely
+unchanged.
+
 ## License
 
-No license is included, which means all rights are reserved — this
+No license is included, which means all rights are reserved. This
 repository is shared to demonstrate the approach and the code, not as
 something to be copied, modified, or reused.
