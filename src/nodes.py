@@ -1,5 +1,5 @@
 """The graph's nodes. Each takes the current CallState and returns a partial
-update to it -- standard LangGraph node shape. Nodes that need the LLM take
+update to it, the standard LangGraph node shape. Nodes that need the LLM take
 it as a keyword argument, bound in graph.py via functools.partial; nodes
 that don't (verify_identity_node) take only the state.
 """
@@ -47,6 +47,8 @@ class TriageAssessment(BaseModel):
 
 
 def intake_node(state: CallState, *, llm) -> dict:
+    """Extracts intent, caller name, and policy number from the raw
+    transcript. Pure extraction: no tools, just a structured-output call."""
     extraction = llm.with_structured_output(IntakeExtraction).invoke(
         [
             SystemMessage(content=INTAKE_SYSTEM_PROMPT),
@@ -66,6 +68,9 @@ def intake_node(state: CallState, *, llm) -> dict:
 
 
 def verify_identity_node(state: CallState) -> dict:
+    """Looks up the policy intake found and checks the caller's stated name
+    against the name on file. No LLM call: this is a plain lookup and string
+    match, not a judgment call."""
     log = list(state.get("agent_log", []))
     policy_number = state.get("policy_number")
 
@@ -91,6 +96,8 @@ def verify_identity_node(state: CallState) -> dict:
 
 
 def triage_claim_node(state: CallState, *, llm) -> dict:
+    """Runs the agentic loop for claims: the model checks claim history
+    before deciding on claim type, severity, and any risk flags."""
     policy_record = state["policy_record"]
     assessment, trace = run_agentic_step(
         llm,
@@ -120,6 +127,8 @@ def triage_claim_node(state: CallState, *, llm) -> dict:
 
 
 def resolve_claim_node(state: CallState, *, llm) -> dict:
+    """Files the claim that triage cleared, then asks the model for a short
+    closing message confirming the ticket to the caller."""
     ticket = create_claim_ticket.invoke(
         {
             "policy_number": state["policy_number"],
@@ -144,6 +153,8 @@ def resolve_claim_node(state: CallState, *, llm) -> dict:
 
 
 def handle_inquiry_node(state: CallState, *, llm) -> dict:
+    """Answers a coverage or billing question directly from the policy
+    record already fetched by verify_identity_node."""
     message = llm.invoke(
         [
             SystemMessage(content=INQUIRY_SYSTEM_PROMPT),
@@ -160,6 +171,9 @@ def handle_inquiry_node(state: CallState, *, llm) -> dict:
 
 
 def escalate_node(state: CallState, *, llm) -> dict:
+    """Terminal node for anything not auto-resolved: works out why the call
+    is being escalated, then asks the model to write a handoff brief for
+    whichever human agent picks it up next."""
     if not state.get("identity_verified"):
         reason = "identity could not be verified"
     elif state.get("risk_flags"):
