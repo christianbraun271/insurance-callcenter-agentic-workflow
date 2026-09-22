@@ -1,5 +1,9 @@
 # Insurance Call Center Agentic Workflow
 
+**Remark: This is an anonymized excerpt, which is based on a real-world prototype
+that served as foundation for a production-grade project. The production-grade project
+is under NDA and cannot be shared.**
+
 A LangGraph multi-agent workflow that takes a raw call transcript from an
 insurance call center and carries it end to end: understand what the caller
 wants, verify who they are, triage a claim if there is one, and either
