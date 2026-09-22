@@ -1,0 +1,46 @@
+[
+  {
+    "policy_number": "AUTO-10234",
+    "policyholder_name": "Maria Chen",
+    "policy_type": "auto",
+    "coverage_limit": 50000,
+    "deductible": 500,
+    "active": true,
+    "policy_start_date": "2022-03-01",
+    "prior_claims_count": 0,
+    "prior_fraud_flags": 0
+  },
+  {
+    "policy_number": "HOME-58821",
+    "policyholder_name": "David Okafor",
+    "policy_type": "home",
+    "coverage_limit": 350000,
+    "deductible": 1000,
+    "active": true,
+    "policy_start_date": "2019-07-15",
+    "prior_claims_count": 1,
+    "prior_fraud_flags": 0
+  },
+  {
+    "policy_number": "AUTO-77410",
+    "policyholder_name": "Priya Natarajan",
+    "policy_type": "auto",
+    "coverage_limit": 30000,
+    "deductible": 250,
+    "active": true,
+    "policy_start_date": "2024-11-02",
+    "prior_claims_count": 3,
+    "prior_fraud_flags": 1
+  },
+  {
+    "policy_number": "HEALTH-90012",
+    "policyholder_name": "Jonas Weber",
+    "policy_type": "health",
+    "coverage_limit": 1000000,
+    "deductible": 2000,
+    "active": true,
+    "policy_start_date": "2021-01-10",
+    "prior_claims_count": 2,
+    "prior_fraud_flags": 0
+  }
+]
