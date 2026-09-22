@@ -1,5 +1,5 @@
 """Tools that stand in for the call center's backend systems: a policy
-administration system and a claims system. Backed by data/policies.json --
+administration system and a claims system. Backed by data/policies.json,
 a small synthetic book of business, not a real insurer's data.
 """
 
@@ -15,6 +15,8 @@ _POLICIES_PATH = Path(__file__).resolve().parent.parent / "data" / "policies.jso
 
 
 def _load_policies() -> dict[str, dict]:
+    """Reads data/policies.json into a dict keyed by policy number, so the
+    tools below can do an O(1) lookup instead of scanning the list."""
     with open(_POLICIES_PATH) as f:
         return {p["policy_number"]: p for p in json.load(f)}
 
