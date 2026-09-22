@@ -10,6 +10,9 @@ wants, verify who they are, triage a claim if there is one, and either
 resolve the call automatically or hand it to a human agent with a written
 briefing.
 
+**Technical Stack: LangGraph as Agentic Workflow, Snowflake as LLM provider, 
+claude-sonnet-5 as LLM, tool calling implemented via structured JSON-parsing**
+
 ## The idea
 
 A call center handles a few repeatable shapes of call: file a claim, ask a
