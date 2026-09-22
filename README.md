@@ -97,7 +97,7 @@ Pass one or more filenames to run just those calls, e.g.
   pattern as this repo's LangGraph learning exercises.
 - **The model matters here.** Cortex's `llama3.1-70b` does not support tool
   calling — it rejects tool-bound requests outright — so this project runs
-  on `claude-3-5-sonnet` instead, which Snowflake documents as tool-calling
+  on `claude-sonnet-5` instead, which Snowflake documents as tool-calling
   capable. Every step that binds tools or asks for structured output (which
   is implemented as tool calling under the hood) needs a model that supports
   it.
