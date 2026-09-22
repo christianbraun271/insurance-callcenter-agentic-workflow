@@ -1,7 +1,6 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.13.3, pytest-9.1.1, pluggy-1.6.0 -- /Users/tiger/tests/langgraph-learning/venv/bin/python3.13
+platform darwin -- Python 3.13.3, pytest-9.1.1, pluggy-1.6.0 --
 cachedir: .pytest_cache
-rootdir: /Users/tiger/tests/insurance-callcenter-agentic-workflow
 plugins: langsmith-0.7.38, anyio-4.15.1
 collecting ... collected 25 items
 
