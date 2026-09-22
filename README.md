@@ -74,6 +74,13 @@ data/
   policies.json      A small synthetic book of business (4 fictional policies)
 sample_calls/
   *.txt              Four transcripts, one per branch through the graph
+tests/
+  test_tools.py      lookup_policy / check_claim_history / create_claim_ticket
+  test_agent_loop.py The tool-calling loop, including its two failure modes
+  test_nodes.py      verify_identity_node's branches (the one node with no LLM call)
+  test_graph.py      Routing functions, plus a full graph run for each of the four branches
+docs/
+  sample_run.md      A real run's output, captured with `python run_demo.py`
 run_demo.py          Runs the sample calls and prints each one's trace
 ```
 
@@ -88,6 +95,21 @@ python run_demo.py
 
 Pass one or more filenames to run just those calls, e.g.
 `python run_demo.py call_3_suspicious_claim.txt`.
+
+## Testing
+
+```bash
+pytest
+```
+
+The test suite doesn't need a Snowflake connection: `test_agent_loop.py` and
+`test_graph.py` swap in a small scripted stand-in for `ChatSnowflake` (see
+`ScriptedLLM` / `GraphFakeLLM` in those files), while `test_tools.py` and
+`test_nodes.py` run for real against the synthetic `data/policies.json`,
+since those have no LLM call to fake in the first place.
+`test_graph.py` builds the actual compiled graph from `src/graph.py` and
+runs it end to end for each of the four branches described above, so it's
+exercising the real routing logic, not a re-implementation of it.
 
 ### What you need
 
