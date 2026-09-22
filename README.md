@@ -117,12 +117,15 @@ exercising the real routing logic, not a re-implementation of it.
 - A programmatic access token (PAT): `create_session_from_pat()` in
   `src/llm.py` authenticates with the `SNOWFLAKE_PAT` env var, the same
   pattern as this repo's LangGraph learning exercises.
-- **The model matters here.** Cortex's `llama3.1-70b` does not support tool
-  calling (it rejects tool-bound requests outright), so this project runs
-  on `claude-sonnet-5` instead, which Snowflake documents as tool-calling
-  capable. Every step that binds tools or asks for structured output (which
-  is implemented as tool calling under the hood) needs a model that supports
-  it.
+- **The model matters here, but only for one step.** Cortex's `llama3.1-70b`
+  does not support tool calling (it rejects tool-bound requests outright),
+  so `triage_claim_node` (the one step that binds a real tool via
+  `bind_tools`) needs a model that does. This project runs on
+  `claude-sonnet-5` everywhere, for simplicity, even though `intake_node`'s
+  `with_structured_output` call doesn't actually need that:
+  `langchain_snowflake` implements it as a JSON-schema instruction injected
+  into the prompt and parsed back out of the response text, not real
+  function calling.
 
 ### The four sample calls
 
