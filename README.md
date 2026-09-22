@@ -10,8 +10,7 @@ wants, verify who they are, triage a claim if there is one, and either
 resolve the call automatically or hand it to a human agent with a written
 briefing.
 
-**Technical Stack: LangGraph as Agentic Workflow, Snowflake as LLM provider, 
-claude-sonnet-5 as LLM, tool calling implemented via structured JSON-parsing, Pytests**
+**Technical Stack: LangGraph for agentic orchestration, Snowflake Cortex as the LLM host, claude-sonnet-5 for tool-calling steps, structured output via prompt-injected JSON schema (not native function-calling), and a hand-rolled tool-calling loop where the prebuilt pattern didn't fit.**
 
 ## The idea
 
@@ -41,6 +40,33 @@ Every branch ends one of two ways: **auto-resolved** (the caller gets an
 answer or a filed claim, no human involved) or **escalated** (a human agent
 gets a written handoff brief explaining why). See
 [`src/graph.py`](src/graph.py) for the actual routing logic.
+
+## Highlights
+
+- **LangChain and LangGraph together**: typed messages (`AIMessage`,
+  `ToolMessage`), `@tool`-decorated functions, and `bind_tools`, orchestrated
+  as a stateful graph rather than a single prompt-and-response loop.
+- **Typed state throughout**: Pydantic models for every LLM output
+  (`IntakeExtraction`, `TriageAssessment`) and a `TypedDict`-based shared
+  graph state (`CallState`), not dicts passed around by convention.
+- **Real branching logic, not a pipeline**: identity verification, intent,
+  and risk assessment each change which node runs next. See
+  [`src/graph.py`](src/graph.py)'s conditional edges.
+- **A hand-rolled agentic loop where the prebuilt pattern didn't fit**:
+  LangGraph's `ToolNode` / `tools_condition` is built for an open-ended chat
+  loop; `triage_claim_node` needs the model to call tools freely but still
+  end in one typed answer, so [`src/agent_loop.py`](src/agent_loop.py)
+  implements that as one more callable "final answer" tool.
+- **Tested without hitting the network**: scripted stand-ins for
+  `bind_tools` / `with_structured_output` / `invoke` cover the tool loop's
+  two failure modes and a full graph run through all four branches. See
+  `tests/` and the Testing section below.
+- **Verified library behavior instead of assuming it**:
+  `with_structured_output`'s default method is named `"function_calling"`,
+  but tracing it through `langchain_snowflake`'s source showed it's actually
+  prompt-injected JSON parsing, not real tool calling. That distinction is
+  documented in "What you need" below rather than left as an assumption.
+
 
 ## How it works
 
