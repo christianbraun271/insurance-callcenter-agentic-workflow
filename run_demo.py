@@ -20,6 +20,8 @@ SAMPLE_DIR = Path(__file__).parent / "sample_calls"
 
 
 def run_one(app, transcript_path: Path) -> None:
+    """Invokes the compiled graph on one transcript file and prints the
+    transcript, the agent trace, and the final decision."""
     transcript = transcript_path.read_text()
 
     print(f"\n{'=' * 72}")
@@ -43,6 +45,8 @@ def run_one(app, transcript_path: Path) -> None:
 
 
 def main() -> None:
+    """Builds the graph once, then runs it over either every sample call or
+    just the filenames passed on the command line."""
     load_dotenv()
     llm = get_llm()
     app = build_graph(llm)
