@@ -61,11 +61,6 @@ gets a written handoff brief explaining why). See
   `bind_tools` / `with_structured_output` / `invoke` cover the tool loop's
   two failure modes and a full graph run through all four branches. See
   `tests/` and the Testing section below.
-- **Verified library behavior instead of assuming it**:
-  `with_structured_output`'s default method is named `"function_calling"`,
-  but tracing it through `langchain_snowflake`'s source showed it's actually
-  prompt-injected JSON parsing, not real tool calling. That distinction is
-  documented in "What you need" below rather than left as an assumption.
 
 
 ## How it works
