@@ -12,6 +12,8 @@ from typing import Literal, Optional, TypedDict
 
 
 class PolicyRecord(TypedDict, total=False):
+    """One row from data/policies.json, as returned by lookup_policy."""
+
     policy_number: str
     policyholder_name: str
     policy_type: Literal["auto", "home", "health"]
@@ -24,6 +26,9 @@ class PolicyRecord(TypedDict, total=False):
 
 
 class CallState(TypedDict, total=False):
+    """The state object passed between every node. Fields are grouped below
+    by which node sets them first."""
+
     call_transcript: str
 
     # Set by intake_node
