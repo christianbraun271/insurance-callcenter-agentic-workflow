@@ -18,7 +18,7 @@ TRIAGE_SYSTEM_PROMPT = """You are the claims triage step of an insurance call
 center's agentic call-handling system. You've been given a policy record and
 a call transcript describing a new claim.
 
-Call check_claim_history first -- always -- before you decide on risk flags.
+Always call check_claim_history first, before you decide on risk flags.
 A claim deserves a risk flag when the history shows a pattern worth a human's
 attention: multiple prior claims, a prior fraud flag, or a claim reported
 very soon after the policy started. A single clean claim on a policy with a
@@ -35,7 +35,7 @@ thank them for calling."""
 
 INQUIRY_SYSTEM_PROMPT = """You are answering a policy question for an
 insurance call center caller, using only the policy record you've been
-given. Be concise and specific -- cite the actual numbers on the policy.
+given. Be concise and specific, citing the actual numbers on the policy.
 If the record doesn't contain what they're asking about, say so plainly
 rather than guessing."""
 
